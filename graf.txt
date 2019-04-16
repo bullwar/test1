@@ -1,0 +1,76 @@
+    public class Human
+    {
+        public int EntityId { set; get; }
+
+        public int? ParentID { set; get; }
+
+        public List<Human> Children { set; get; }
+
+    }
+
+
+    public class Program
+    {
+
+        public static void Main(string[] args)
+        {
+            var vertices = new[] { 1, 2, 3, 4 };
+            var edges = new List<Human>{new Human{EntityId = 1, ParentID = null },
+            new Human{EntityId = 2, ParentID = null },
+            new Human{EntityId = 3, ParentID = 1 },
+            new Human{EntityId = 4, ParentID = 1 },
+            new Human{EntityId = 5, ParentID = 3 },
+            new Human{EntityId = 6, ParentID = 5 }};
+
+
+
+
+            var listParent = edges.Where(x => x.ParentID == null).ToList();
+
+            var listChild = edges.Where(x => x.ParentID != null).ToList();
+
+    //        Rec(listParent, listChild);
+
+
+
+
+            RecList(edges);
+
+            Console.WriteLine(listParent);
+        }
+
+       static List<Human> listParentnStatic = new List<Human>{new Human{EntityId = 1, ParentID = null },
+            new Human{EntityId = 2, ParentID = null },
+            new Human{EntityId = 3, ParentID = 1 },
+            new Human{EntityId = 4, ParentID = 1 },
+            new Human{EntityId = 5, ParentID = 3 },
+            new Human{EntityId = 6, ParentID = 5 }};
+
+        static void RecList(List<Human> listParentn)
+        {
+
+            for (int i = 0; i < listParentn.Count; i++)
+            {
+                for (int j = 0; j < listParentnStatic.Count; j++)
+                {
+                    if(listParentn[i].EntityId == listParentnStatic[j].ParentID)
+                    {
+                        if (listParentn[i].Children == null)
+                        {
+                            listParentn[i].Children = new List<Human>();
+                            listParentn[i].Children.Add(listParentnStatic[j]);
+                            RecList(listParentn[i].Children);
+                        } else
+                        {
+                            if (listParentn[i].Children.Any(item => item.EntityId == listParentnStatic[j].EntityId)) {
+                                continue;
+                            } else
+                            {
+                                listParentn[i].Children.Add(listParentnStatic[j]);
+                                RecList(listParentn[i].Children);
+                            }
+                        }
+                    }
+                }
+            }
+         }

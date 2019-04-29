@@ -1,1 +1,6 @@
 1
+
+
+        Reception rec = context.getBean("reception", ReceptionImp.class);
+        ((ReceptionImp) rec).setDoc(new DoctorImpWrong());
+        rec.showDirection();
